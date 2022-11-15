@@ -8,9 +8,15 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
 
-
 app:
+  jwt:
+    secret: recipesBackendSecretKey
+    expiration-ms: 86400000
   data:
+    users[0]:
+      userName: bob
+      password: 12341
+
     flights[0]:
       flightNumber: A101
       origin: AMS

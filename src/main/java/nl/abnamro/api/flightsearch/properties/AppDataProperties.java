@@ -15,6 +15,7 @@ import java.util.List;
 public class AppDataProperties {
 
     private List<Flight> flights = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     @Getter
     @Setter
@@ -28,6 +29,13 @@ public class AppDataProperties {
         private String arrivalTime;
         private double price;
 
+    }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class User {
+        private String userName;
+        private String password;
     }
 
 }

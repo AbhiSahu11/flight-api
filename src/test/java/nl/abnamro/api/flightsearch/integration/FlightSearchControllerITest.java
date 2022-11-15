@@ -1,19 +1,14 @@
-package nl.abnamro.api.flightsearch.controller;
+package nl.abnamro.api.flightsearch.integration;
 
 import nl.abnamro.api.flightsearch.domain.Flight;
-import nl.abnamro.api.flightsearch.service.FlightSearchService;
-import nl.abnamro.api.flightsearch.service.InvalidInputException;
+import nl.abnamro.api.flightsearch.repository.FlightSearchRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
@@ -23,24 +18,20 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-@ExtendWith(SpringExtension.class)
-@WebMvcTest (FlightSearchController.class)
-class FlightSearchControllerTest {
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+class FlightSearchControllerITest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private FlightSearchService flightSearchService;
+    @Autowired
+    private FlightSearchRepository flightSearchRepository;
 
 
     @Test
@@ -58,18 +49,14 @@ class FlightSearchControllerTest {
         List<Flight> listOfFlights = new ArrayList<>();
         listOfFlights.add(flight);
         listOfFlights.add(Flight.builder().flightNumber("A102").origin("AMS").destination("DEL").departureTime(new Date()).arrivalTime(new Date()).price(800).build());
-
-        given(flightSearchService.findAllByParameters(anyString(),anyString(),anyString(),anyString())).willReturn(listOfFlights);
+        flightSearchRepository.saveAll(listOfFlights);
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("origin", "AMS");
         requestParams.add("destination", "DEL");
-        requestParams.add("price", "700");
-        requestParams.add("duration", "06:00");
         // when
         ResultActions action = mockMvc.perform(get("/api/flight-search").queryParams(requestParams) );
         // then
-
         action.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.size()",is(listOfFlights.size())))
@@ -78,28 +65,17 @@ class FlightSearchControllerTest {
                 .andExpect(jsonPath("$.[0].destination").value(flight.getDestination()))
                 .andExpect(jsonPath("$.[0].price").value(flight.getPrice()))
                 .andDo(print());
+
+
     }
 
     @Test
     public void shouldGiveBadRequest_whenGetAllFlights_ForEmptyOrigin() throws Exception{
         // given
-        Flight flight= Flight.builder()
-                .flightNumber("A101")
-                .origin("AMS")
-                .destination("DEL")
-                .departureTime(new Date())
-                .arrivalTime(new Date())
-                .price(800)
-                .build();
-
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("origin", "");
         requestParams.add("destination", "DEL");
-        requestParams.add("price", "700");
-        requestParams.add("duration", "06:00");
         // when
-        given(flightSearchService.findAllByParameters(anyString(),anyString(),anyString(),anyString())).willThrow(new InvalidInputException("origin not valid"));
-
         ResultActions action = mockMvc.perform(get("/api/flight-search").queryParams(requestParams) );
         // then
         action
@@ -116,23 +92,10 @@ class FlightSearchControllerTest {
     @Test
     public void shouldGiveBadRequest_whenGetAllFlights_ForEmptyDestination() throws Exception{
         // given
-        Flight flight= Flight.builder()
-                .flightNumber("A101")
-                .origin("AMS")
-                .destination("DEL")
-                .departureTime(new Date())
-                .arrivalTime(new Date())
-                .price(800)
-                .build();
-
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("origin", "AMS");
         requestParams.add("destination", "");
-        requestParams.add("price", "700");
-        requestParams.add("duration", "06:00");
         // when
-        given(flightSearchService.findAllByParameters(anyString(),anyString(),anyString(),anyString())).willThrow(new InvalidInputException("destination not valid"));
-
         ResultActions action = mockMvc.perform(get("/api/flight-search").queryParams(requestParams) );
         // then
         action
