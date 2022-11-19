@@ -4,23 +4,23 @@ Flight Search API contains REST endpoint in order to search flight details and r
 ### System Design
 Flight Search API is microservice based layered architectured RESTful Web Service. This service can be deployed independently on premise / cloud and can also be containerized to execute as docker containers. There are 4 layers from top to bottom:
 - API Layer
-  - Top layer, which is main interface available for intgeration and interaction with front-end or end user to consume APIs
-  - Contains secured API end points implementation
-  - [Springboot-starter-security](https://spring.io/guides/gs/securing-web/) Module along with JWT is used to implement authentication for APIs 
-  - [Springboot-starter-web](https://spring.io/guides/gs/rest-service/) module used as a framework to implement Restful api end points  
+  - Top layer, which is main interface available for intgeration and interaction with front-end or end user to consume APIs.
+  - Contains secured API end points implementation.
+  - [Springboot-starter-security](https://spring.io/guides/gs/securing-web/) Module along with JWT is used to implement authentication for APIs. 
+  - [Springboot-starter-web](https://spring.io/guides/gs/rest-service/) module used as a framework to implement Restful api end points. 
 - Service Layer
-  - This layer sits in between API layer and Data access layer with some utility functionality
-  - Mainly responsible for interacting with Data Access Layer and transferring the flight data as required by top and below layers
-  - It's just another module added to decouple business logic of flight data transfer and mapping from/to API layer
-  - Further, service layer can be enhanced to support advanved features like Caching, Interacting with external Authorization Service etc
+  - This layer sits in between API layer and Data access layer with some utility functionality.
+  - Mainly responsible for interacting with Data Access Layer and transferring the flight data as required by top and below layers.
+  - It's just another module added to decouple business logic of flight data transfer and mapping from/to API layer.
+  - Further, service layer can be enhanced to support advanved features like Caching, Interacting with external Authorization Service etc.
 - Data Access Layer
-  - Responsible to provide Object Relationship Mapping (ORM) between higher level flight Java objects and persistence layer tables
-  - [Springboot-starter-data-JPA](https://spring.io/guides/gs/accessing-data-jpa/) module is used to implement mappings between objects and tables
-  - This layer contains flight entity classes and JPA repositories which implement lower level functionality of storing/retrieving recipes data  
+  - Responsible to provide Object Relationship Mapping (ORM) between higher level flight Java objects and persistence layer tables.
+  - [Springboot-starter-data-JPA](https://spring.io/guides/gs/accessing-data-jpa/) module is used to implement mappings between objects and tables.
+  - This layer contains flight entity classes and JPA repositories which implement lower level functionality of storing/retrieving recipes data.  
 - Persistence Layer
-  - Bottom most layer, responsible for physically storing the recipes data onto database table
-  - Just one physical table - `flight` is used to store the flight data for the service
-  - For development and testing purposes, the Embedded H2 Database provided by Spring Boot framework is also utilized 
+  - Bottom most layer, responsible for physically storing the recipes data onto database table.
+  - Just one physical table - `flight` is used to store the flight data for the service.
+  - For development and testing purposes, the Embedded H2 Database provided by Spring Boot framework is also utilized. 
 
 ### Supported Features
 | Feature                     | Software Module Used                                                                                         |
