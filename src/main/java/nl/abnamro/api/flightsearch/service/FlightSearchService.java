@@ -45,4 +45,6 @@ public class FlightSearchService {
                 StreamSupport.stream(flightSearchRepository.findAll(booleanBuilder.getValue()).spliterator(), false)
                         .collect(Collectors.toList());
     }
+
+
 }
