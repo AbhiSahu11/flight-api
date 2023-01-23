@@ -1,0 +1,27 @@
+[
+  {
+      "flightNumber":"A101",
+      "origin":"AMS",
+      "destination":"DEL",
+      "departureTime":"11:00",
+      "arrivalTime":"17:00",
+      "price": 700
+  },
+  {
+    "flightNumber":"A201",
+    "origin":"AMS",
+    "destination":"BOM",
+    "departureTime":"13:30",
+    "arrivalTime":"21:45",
+    "price": 750
+  },
+  {
+    "flightNumber":"A201",
+    "origin":"AMS",
+    "destination":"BOM",
+    "departureTime":"13:00",
+    "arrivalTime":"23:00",
+    "price": 750
+  }
+
+]
