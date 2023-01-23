@@ -1,5 +1,6 @@
 package nl.abnamro.api.flightsearch.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.abnamro.api.flightsearch.domain.Flight;
 import nl.abnamro.api.flightsearch.repository.FlightSearchRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -41,6 +43,9 @@ class FlightSearchControllerITest {
     @Autowired
     private WebApplicationContext context;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders
@@ -54,6 +59,7 @@ class FlightSearchControllerITest {
     public void givenListOfFlight_whenGetAllFlights_thenReturnFlightList() throws Exception{
         // given
         Flight flight= Flight.builder()
+                .id(UUID.randomUUID())
                 .flightNumber("A101")
                 .origin("AMS")
                 .destination("DEL")
@@ -64,13 +70,14 @@ class FlightSearchControllerITest {
 
         List<Flight> listOfFlights = new ArrayList<>();
         listOfFlights.add(flight);
-        listOfFlights.add(Flight.builder().flightNumber("A102").origin("AMS").destination("DEL").departureTime(LocalTime.now()).arrivalTime(LocalTime.now()).price(800).build());
+        listOfFlights.add(Flight.builder().id(UUID.randomUUID()).flightNumber("A102").origin("AMS").destination("DEL").departureTime(LocalTime.now()).arrivalTime(LocalTime.now()).price(800).build());
         flightSearchRepository.saveAll(listOfFlights);
 
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("origin", "AMS");
         requestParams.add("destination", "DEL");
         // when
+        //ResultActions action = mockMvc.perform(get("/api/flight-search").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(flight)));
         ResultActions action = mockMvc.perform(get("/api/flight-search").queryParams(requestParams) );
         // then
         action.andExpect(status().isOk())

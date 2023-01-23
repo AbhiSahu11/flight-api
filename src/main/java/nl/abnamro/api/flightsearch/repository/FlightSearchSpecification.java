@@ -1,7 +1,6 @@
 package nl.abnamro.api.flightsearch.repository;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import nl.abnamro.api.flightsearch.domain.Flight;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;

@@ -30,8 +30,8 @@ public class FlightSearchController {
             @ApiResponse(responseCode = "400", description = "Bad Request - The request is not valid"),
     })
     @GetMapping
-    public List<Flight> findFlightDetails( @RequestParam  (value = "origin") String origin,
-                                                                   @RequestParam ("destination" ) String destination,
+    public List<Flight> findFlightDetails( @RequestParam  (name = "origin",required = false) String origin,
+                                                                   @RequestParam (name="destination",required = false ) String destination,
                                                                    @RequestParam (name="price",required = false) String price,
                                                                    @RequestParam (name="duration",required = false) String duration) {
 
