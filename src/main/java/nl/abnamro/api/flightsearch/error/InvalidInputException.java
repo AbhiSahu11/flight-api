@@ -1,4 +1,4 @@
-package nl.abnamro.api.flightsearch.service;
+package nl.abnamro.api.flightsearch.error;
 
 public class InvalidInputException extends IllegalArgumentException {
 
